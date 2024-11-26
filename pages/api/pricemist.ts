@@ -4,7 +4,6 @@ import { SuiClient } from '@mysten/sui/client';
 import { Ed25519Keypair } from '@mysten/sui/keypairs/ed25519';
 import axios from 'axios';
 import { Transaction } from '@mysten/sui/transactions';
-import { resourceUsage } from "process";
 
 const SUI_MIST = 1000000000
 
@@ -21,14 +20,15 @@ const suiUsdPriceOracleId = process.env.SUI_USD_PRICE_ORACLE_ID!;
 const moduleName = 'sui_usd_price';
 
 const getPrice = async (): Promise<number> => {
-    let API_HOST2 = 'https://api.binance.com'
+    const API_HOST2 = 'https://api.binance.com'
     try {
         const res = await axios.get(`${API_HOST2}/api/v3/ticker/price`);
             //console.log(JSON.stringify(res.data))
         if (res.data && res.data.length > 0) {
-        let pr = res.data.filter((p: any) => p.symbol === 'SUIUSDT')
+            console.log(res.data)
+            const pr = res.data.filter((p: { symbol: string }) => p.symbol === 'SUIUSDT')
             //console.log(pr[0])
-        return pr[0].price
+            return pr[0].price
         }
         return 0;
     } catch (err) {
@@ -44,7 +44,7 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
         const priceBigInt = price * SUI_MIST;
         const timestamp = Math.floor(Date.now() / 1000);
         console.log(priceBigInt);
-        let transaction = new Transaction();
+        const transaction = new Transaction();
         transaction.setGasBudget(SUI_MIST / 10);
         transaction.moveCall({
             target: `${packageId}::${moduleName}::update_price`,
@@ -56,7 +56,7 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
             ],
         });
 
-        let response = await client.signAndExecuteTransaction({
+        const response = await client.signAndExecuteTransaction({
             signer: keypair,
             transaction,
         });

@@ -13,7 +13,6 @@ const client = new SuiClient({
 });
 
 const packageId = process.env.PACKAGE_ID;
-const adminCap = process.env.ADMIN_CAP_ID!;
 const suiUsdPriceOracleId = process.env.SUI_USD_PRICE_ORACLE_ID!;
 const moduleName = 'sui_usd_price';
 
@@ -21,7 +20,7 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
     try {
         console.log("Cron job triggered");
 
-        let transaction = new Transaction();
+        const transaction = new Transaction();
         transaction.setGasBudget(SUI_MIST / 10);
         transaction.moveCall({
             target: `${packageId}::${moduleName}::get_price`,
@@ -30,7 +29,7 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
             ],
         });
 
-        let response = await client.signAndExecuteTransaction({
+        const response = await client.signAndExecuteTransaction({
             signer: keypair,
             transaction,
         });

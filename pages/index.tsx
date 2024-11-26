@@ -1,26 +1,26 @@
-import Image from "next/image";
-import localFont from "next/font/local";
-import { SuiClient } from '@mysten/sui/client';
-import { useEffect, useState } from "react";
+// import Image from "next/image";
+// import localFont from "next/font/local";
+// import { SuiClient } from '@mysten/sui/client';
+import { useEffect } from "react";
 
-const client = new SuiClient({
-    url: 'https://rpc-testnet.suiscan.xyz:443',
-});
+// const client = new SuiClient({
+//     url: 'https://rpc-testnet.suiscan.xyz:443',
+// });
 
-const geistSans = localFont({
-  src: "./fonts/GeistVF.woff",
-  variable: "--font-geist-sans",
-  weight: "100 900",
-});
-const geistMono = localFont({
-  src: "./fonts/GeistMonoVF.woff",
-  variable: "--font-geist-mono",
-  weight: "100 900",
-});
+// const geistSans = localFont({
+//   src: "./fonts/GeistVF.woff",
+//   variable: "--font-geist-sans",
+//   weight: "100 900",
+// });
+// const geistMono = localFont({
+//   src: "./fonts/GeistMonoVF.woff",
+//   variable: "--font-geist-mono",
+//   weight: "100 900",
+// });
 
 export default function Home() {
 
-    const [price, setPrice] = useState(0);
+    //const [price, setPrice] = useState(0);
 
     useEffect(() => {
         async function getPrice() {
