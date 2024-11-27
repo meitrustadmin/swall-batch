@@ -26,7 +26,6 @@ const getPrice = async (): Promise<number> => {
         console.log(JSON.stringify(res.data))
         if (res.data) {
             console.log(res.data)
-            //const pr = res.data.filter((p: { symbol: string, price: string }) => p.symbol === 'SUIUSDT')
             console.log(res.data.price)
             return res.data.price
         }
@@ -41,28 +40,29 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
     try {
         console.log("Cron job triggered");
         const price = await getPrice();
-        const priceBigInt = price * SUI_MIST;
-        const timestamp = Math.floor(Date.now() / 1000);
-        console.log(priceBigInt);
-        const transaction = new Transaction();
-        transaction.setGasBudget(SUI_MIST / 10);
-        transaction.moveCall({
-            target: `${packageId}::${moduleName}::update_price`,
-            arguments: [
-                transaction.object(adminCap), // AdminCap
-                transaction.object(suiUsdPriceOracleId), // SuiUsdPriceOracle
-                transaction.pure.u64(priceBigInt), // new_price
-                transaction.pure.u64(timestamp), // timestamp
-            ],
-        });
-
-        const response = await client.signAndExecuteTransaction({
-            signer: keypair,
-            transaction,
-        });
-
-        console.log(response);
-
+        if (price > 0) {
+            const priceBigInt = price * SUI_MIST;
+            const timestamp = Math.floor(Date.now() / 1000);
+            console.log(priceBigInt);
+            const transaction = new Transaction();
+            transaction.setGasBudget(SUI_MIST / 10);
+            transaction.moveCall({
+                target: `${packageId}::${moduleName}::update_price`,
+                arguments: [
+                    transaction.object(adminCap), // AdminCap
+                    transaction.object(suiUsdPriceOracleId), // SuiUsdPriceOracle
+                    transaction.pure.u64(priceBigInt), // new_price
+                    transaction.pure.u64(timestamp), // timestamp
+                ],
+            });
+    
+            const response = await client.signAndExecuteTransaction({
+                signer: keypair,
+                transaction,
+            });
+    
+            console.log(response);
+        }
         res.status(200).json({ message: "Job executed" });
     } catch (error) {
         console.error("Error executing cron job:", error);
