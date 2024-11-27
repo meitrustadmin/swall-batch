@@ -25,8 +25,8 @@ const getPrice = async (): Promise<number> => {
         const res = await axios.get(`${API_HOST2}/api/v3/ticker/price`);
             //console.log(JSON.stringify(res.data))
         if (res.data && res.data.length > 0) {
-            console.log(res.data)
-            const pr = res.data.filter((p: { symbol: string }) => p.symbol === 'SUIUSDT')
+            //console.log(res.data)
+            const pr = res.data.filter((p: { symbol: string, price: string }) => p.symbol === 'SUIUSDT')
             //console.log(pr[0])
             return pr[0].price
         }
