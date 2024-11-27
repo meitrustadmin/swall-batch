@@ -22,13 +22,13 @@ const moduleName = 'sui_usd_price';
 const getPrice = async (): Promise<number> => {
     const API_HOST2 = 'https://api.binance.com'
     try {
-        const res = await axios.get(`${API_HOST2}/api/v3/ticker/price`);
-            //console.log(JSON.stringify(res.data))
-        if (res.data && res.data.length > 0) {
-            //console.log(res.data)
-            const pr = res.data.filter((p: { symbol: string, price: string }) => p.symbol === 'SUIUSDT')
-            //console.log(pr[0])
-            return pr[0].price
+        const res = await axios.get(`${API_HOST2}/api/v3/ticker/price?symbol=SUIUSDT`);
+        console.log(JSON.stringify(res.data))
+        if (res.data) {
+            console.log(res.data)
+            //const pr = res.data.filter((p: { symbol: string, price: string }) => p.symbol === 'SUIUSDT')
+            console.log(res.data.price)
+            return res.data.price
         }
         return 0;
     } catch (err) {
